@@ -363,8 +363,6 @@ class _EasySearchBarState<T> extends State<EasySearchBar<T>>
 
     assert(widget.leading == null || !scaffold!.hasDrawer,
         'Cannot use leading with drawer');
-    assert(widget.leading == null || !canPop,
-        'Cannot use leading when back button exists');
 
     Color? backgroundColor = widget.backgroundColor ??
         appBarTheme.backgroundColor ??
@@ -463,32 +461,33 @@ class _EasySearchBarState<T> extends State<EasySearchBar<T>>
                                                                 .openAppDrawerTooltip),
                                                   )),
                                               replacement: Visibility(
-                                                  visible: canPop,
-                                                  child: IconTheme(
-                                                    data: iconTheme,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              right: 10),
-                                                      child: IconButton(
-                                                          icon: const Icon(Icons
-                                                              .arrow_back_outlined),
-                                                          onPressed: () =>
-                                                              Navigator.pop(
-                                                                  context),
-                                                          tooltip: MaterialLocalizations
-                                                                  .of(context)
-                                                              .backButtonTooltip),
-                                                    ),
+                                                  visible:
+                                                      widget.leading != null,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            right: 10),
+                                                    child: widget.leading,
                                                   ),
                                                   replacement: Visibility(
-                                                    visible:
-                                                        widget.leading != null,
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              right: 10),
-                                                      child: widget.leading,
+                                                    visible: canPop,
+                                                    child: IconTheme(
+                                                      data: iconTheme,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                    .only(
+                                                                right: 10),
+                                                        child: IconButton(
+                                                            icon: const Icon(Icons
+                                                                .arrow_back_outlined),
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context),
+                                                            tooltip: MaterialLocalizations
+                                                                    .of(context)
+                                                                .backButtonTooltip),
+                                                      ),
                                                     ),
                                                     replacement:
                                                         const SizedBox(),
@@ -505,46 +504,42 @@ class _EasySearchBarState<T> extends State<EasySearchBar<T>>
                                                     child: widget.title,
                                                   ))),
                                           ...List.generate(
-                                            widget.actions.length + 1,
-                                            (index) {
-                                              if (widget.actions.length ==
-                                                          index &&
-                                                      !widget
-                                                          .putActionsOnRight ||
-                                                  index == 0 &&
-                                                      widget
-                                                          .putActionsOnRight) {
-                                                return IconTheme(
-                                                    data: iconTheme,
-                                                    child: IconButton(
-                                                        icon: const Icon(
-                                                            Icons.search),
-                                                        iconSize:
-                                                            iconTheme.size ??
-                                                                24,
-                                                        onPressed: () {
-                                                          _controller.forward();
-                                                          _focusNode
-                                                              .requestFocus();
-
-                                                          if (widget
-                                                              .openOverlayOnSearch) {
-                                                            openOverlay();
-                                                          }
-                                                        },
-                                                        tooltip:
-                                                            MaterialLocalizations
-                                                                    .of(context)
-                                                                .searchFieldLabel));
-                                              }
+                                              widget.actions.length + 1,
+                                              (index) {
+                                            if (widget.actions.length ==
+                                                        index &&
+                                                    !widget.putActionsOnRight ||
+                                                index == 0 &&
+                                                    widget.putActionsOnRight) {
                                               return IconTheme(
                                                   data: iconTheme,
-                                                  child: widget.actions[
-                                                      widget.putActionsOnRight
-                                                          ? (index - 1)
-                                                          : index]);
+                                                  child: IconButton(
+                                                      icon: const Icon(
+                                                          Icons.search),
+                                                      iconSize:
+                                                          iconTheme.size ?? 24,
+                                                      onPressed: () {
+                                                        _controller.forward();
+                                                        _focusNode
+                                                            .requestFocus();
+
+                                                        if (widget
+                                                            .openOverlayOnSearch) {
+                                                          openOverlay();
+                                                        }
+                                                      },
+                                                      tooltip:
+                                                          MaterialLocalizations
+                                                                  .of(context)
+                                                              .searchFieldLabel));
                                             }
-                                          )
+                                            return IconTheme(
+                                                data: iconTheme,
+                                                child: widget.actions[
+                                                    widget.putActionsOnRight
+                                                        ? (index - 1)
+                                                        : index]);
+                                          })
                                         ])),
                                 Positioned(
                                     right: 0,
